@@ -44,13 +44,8 @@ public class Profile implements Comparable<Profile> {
      */
     @Override
     public int compareTo(Profile profile) {
-        if (!this.fname.equals(profile.fname)) {
-            return this.fname.compareTo(profile.fname);
-        }
-        if (!this.lname.equals(profile.lname)) {
-            return this.lname.compareTo(profile.lname);
-        }
-
+        if (!this.fname.equals(profile.fname)) return this.fname.compareTo(profile.fname);
+        if (!this.lname.equals(profile.lname)) return this.lname.compareTo(profile.lname);
         return this.dob.compareTo(profile.dob);
     }
 
@@ -62,13 +57,8 @@ public class Profile implements Comparable<Profile> {
      * @return true if the objects are equal, false otherwise.
      */
     public boolean equals(Profile profile) {
-        if (!this.fname.equals(profile.fname)) {
-            return false;
-        }
-        if (!this.lname.equals(profile.lname)) {
-            return false;
-        }
-
+        if (!this.fname.equals(profile.fname)) return false;
+        if (!this.lname.equals(profile.lname)) return false;
         return this.dob.equals(profile.dob);
     }
 

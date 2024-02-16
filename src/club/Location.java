@@ -7,7 +7,7 @@ package club;
  */
 public enum Location {
 
-    Bridgewater, Edison, Franklin, Piscataway, Somerville;
+    bridgewater, edison, franklin, piscataway, somerville;
 
 
     /**
@@ -17,10 +17,10 @@ public enum Location {
      * @return String representation of the zip code
      */
     public String getZipCode() {
-        if (this == Location.Bridgewater) return "08807";
-        if (this == Location.Edison) return "08873";
-        if (this == Location.Franklin) return "08873";
-        if (this == Location.Piscataway) return "08854";
+        if (this == Location.bridgewater) return "08807";
+        if (this == Location.edison) return "08873";
+        if (this == Location.franklin) return "08873";
+        if (this == Location.piscataway) return "08854";
         return "08876";
     }
 
@@ -31,8 +31,8 @@ public enum Location {
      * @return String representation of the County
      */
     public String getCounty() {
-        if (this == Location.Bridgewater || this == Location.Franklin ||
-                this == Location.Somerville) return " SOMERSET";
+        if (this == Location.bridgewater || this == Location.franklin ||
+                this == Location.somerville) return " SOMERSET";
         return "MIDDLESEX";
     }
 }

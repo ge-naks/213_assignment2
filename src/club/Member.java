@@ -50,12 +50,8 @@ public class Member implements Comparable<Member> {
      */
     @Override
     public int compareTo(Member member) {
-        if (!this.profile.equals(member.profile)) {
-            return this.profile.compareTo(member.profile);
-        }
-        if (!this.expire.equals(member.expire)) {
-            return this.expire.compareTo(member.expire);
-        }
+        if (!this.profile.equals(member.profile)) return this.profile.compareTo(member.profile);
+        if (!this.expire.equals(member.expire)) return this.expire.compareTo(member.expire);
         return this.homeStudio.compareTo(member.homeStudio);
     }
 
@@ -66,12 +62,8 @@ public class Member implements Comparable<Member> {
      * @return true if the objects are equal, false otherwise.
      */
     public boolean equals(Member member) {
-        if (!this.profile.equals(member.profile)) {
-            return false;
-        }
-        if (!this.expire.equals(member.expire)) {
-            return false;
-        }
+        if (!this.profile.equals(member.profile)) return false;
+        if (!this.expire.equals(member.expire)) return false;
         return this.homeStudio.equals(member.homeStudio);
     }
 
