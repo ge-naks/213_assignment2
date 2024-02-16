@@ -7,8 +7,19 @@ package club;
  */
 public enum Location {
 
-    bridgewater, edison, franklin, piscataway, somerville;
+    BRIDGEWATER("08807", "SOMERSET"),
+    EDISON("08873", "MIDDLESEX"),
+    FRANKLIN("08873", "SOMERSET"),
+    PISCATAWAY("08854", "MIDDLESEX"),
+    SOMERVILLE("08876", "SOMERSET");
 
+    private final String zipCode;
+    private final String county;
+
+    Location(String zipCode, String county) {
+        this.zipCode = zipCode;
+        this.county = county;
+    }
 
     /**
      * A public method that provides a string representation
@@ -17,11 +28,7 @@ public enum Location {
      * @return String representation of the zip code
      */
     public String getZipCode() {
-        if (this == Location.bridgewater) return "08807";
-        if (this == Location.edison) return "08873";
-        if (this == Location.franklin) return "08873";
-        if (this == Location.piscataway) return "08854";
-        return "08876";
+        return zipCode;
     }
 
     /**
@@ -31,8 +38,6 @@ public enum Location {
      * @return String representation of the County
      */
     public String getCounty() {
-        if (this == Location.bridgewater || this == Location.franklin ||
-                this == Location.somerville) return " SOMERSET";
-        return "MIDDLESEX";
+        return county;
     }
 }

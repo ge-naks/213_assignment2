@@ -1,6 +1,6 @@
 package club;
 
-import java.util.Date;
+import java.util.Calendar;
 
 /**
  * This class represents a current Member of the fitness club.
@@ -38,7 +38,6 @@ public class Member implements Comparable<Member> {
      * @return The next due amount for the membership.
      */
     public double bill() {
-        // work on this later
         return 0.0;
     }
 
