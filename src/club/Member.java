@@ -38,7 +38,12 @@ public class Member implements Comparable<Member> {
      * @return The next due amount for the membership.
      */
     public double bill() {
-        return 0.0;
+        Calendar temp = Calendar.getInstance();
+        Date today = new Date(temp.get(Calendar.MONTH), temp.get(Calendar.DAY_OF_MONTH),
+                temp.get(Calendar.YEAR));
+
+        if(today.compareTo(this.expire) > 0) return 0.0; // member already expired, do not bill
+        
     }
 
     /**
