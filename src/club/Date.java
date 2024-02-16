@@ -1,6 +1,6 @@
 package club;
 import java.util.Calendar;
-
+import java.util.StringTokenizer;
 
 /**
  * An object representation of a valid Calendar date. Contains methods to verify
@@ -23,7 +23,7 @@ public class Date implements Comparable<Date> {
 
 
     /**
-     * Creates a date constructor with user specified values for the year, month and day.
+     * Date constructor with user specified values for the year, month and day.
      *
      * @param year  the year for the date object
      * @param month the month of the year for the date object
@@ -34,6 +34,23 @@ public class Date implements Comparable<Date> {
         this.day = day;
         this.year = year;
     }
+
+
+    /**
+     * Date constructor with user specified values for the year, month and day.
+     *
+     * @param stringDate a string representation of a date in mm/dd/yyyy format
+     */
+    public Date(String stringDate) {
+        // mm/dd/yyyy format
+        StringTokenizer tokenizer = new StringTokenizer(stringDate ,"/");
+        this.month = Integer.parseInt(tokenizer.nextToken());
+        this.day = Integer.parseInt(tokenizer.nextToken());
+        this.year = Integer.parseInt(tokenizer.nextToken());
+
+    }
+
+
 
     /**
      * Gets the year of a target date object
@@ -66,17 +83,16 @@ public class Date implements Comparable<Date> {
     /**
      * Determines if a date is a valid calendar date
      *
-     * @param date date object to be tested for validity
      * @return boolean true if date is valid, false otherwise
      */
-    public boolean isValid(Date date) {
+    public boolean isValid() {
 
         Calendar checkDate = Calendar.getInstance();
         checkDate.setLenient(false); // Disable leniency (to strictly enforce date validity)
 
-        checkDate.set(Calendar.YEAR, date.getYear());
-        checkDate.set(Calendar.MONTH, date.getMonth() - 1); // Note: Month is zero-based, so subtract 1 from our 1 indexed date
-        checkDate.set(Calendar.DAY_OF_MONTH, date.getDay());
+        checkDate.set(Calendar.YEAR, this.getYear());
+        checkDate.set(Calendar.MONTH, this.getMonth() - 1); // Note: Month is zero-based, so subtract 1 from our 1 indexed date
+        checkDate.set(Calendar.DAY_OF_MONTH, this.getDay());
 
         try {
             checkDate.getTime(); // This call will throw an exception if the date is invalid
@@ -85,7 +101,7 @@ public class Date implements Comparable<Date> {
             return false;
         }
 
-        if (date.getYear() < 1900) return false;
+        if (this.getYear() < 1900) return false;
 
         Calendar todayDate = Calendar.getInstance();
         int todayYear = todayDate.get(Calendar.YEAR);
@@ -94,7 +110,7 @@ public class Date implements Comparable<Date> {
 
         Date currentDate = new Date(todayMonth, todayDay, todayYear);
 
-        return date.compareTo(currentDate) != 0 && date.compareTo(currentDate) <= 0;
+        return this.compareTo(currentDate) != 0 && this.compareTo(currentDate) <= 0;
     }
 
 
@@ -140,4 +156,12 @@ public class Date implements Comparable<Date> {
     public String toString() {
         return this.month + "/" + this.day + "/" + this.year;
     }
+
+    public static void main(String[] args) {
+        Date test6 = new Date("2/29/2024");
+        System.out.println(test6);
+        System.out.println(test6.isValid());
+    }
+
+
 }
