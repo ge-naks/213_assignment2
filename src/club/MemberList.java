@@ -6,6 +6,7 @@ import java.io.IOException;
 
 public class MemberList {
     private Member[] members; //holds Basic, Family, or Premium objects
+    
     private int size; //number of objects in the array
 
     private int find(Member member) {
