@@ -1,6 +1,8 @@
 package club;
 
 
+import java.util.Calendar;
+
 /**
  * Represents a profile for a previous or current member of the fitness club. Contains
  * name and dob
@@ -32,6 +34,20 @@ public class Profile implements Comparable<Profile> {
         this.fname = fname;
         this.lname = lname;
         this.dob = dob;
+    }
+
+    public Date getDob(){
+        return this.dob;
+    }
+
+    public boolean isValid(){
+        Calendar today = Calendar.getInstance();
+        Date todayAsDate = new Date(today.get(Calendar.MONTH) + 1, today.get(Calendar.DAY_OF_YEAR), today.get(Calendar.YEAR));
+
+        Date dob = this.getDob();
+
+        return dob.getYear() + 18 <= todayAsDate.getYear() && dob.getMonth() <= todayAsDate.getYear();
+
     }
 
 

@@ -10,11 +10,11 @@ public class Basic extends Member {
     }
     // getter
     public int getNumClasses() {
-        return numClasses;
+        return this.numClasses;
     }
 
     public void attendClasses() {
-        numClasses++;
+        this.numClasses++;
     }
     @Override
     public double bill() {

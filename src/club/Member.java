@@ -1,5 +1,7 @@
 package club;
 
+import java.awt.color.ProfileDataException;
+import java.nio.channels.CancelledKeyException;
 import java.util.Calendar;
 
 /**
@@ -43,8 +45,10 @@ public class Member implements Comparable<Member> {
                 temp.get(Calendar.YEAR));
 
         if(today.compareTo(this.expire) > 0) return 0.0; // member already expired, do not bill
-        
+        return 0.0;
     }
+
+
 
     /**
      * Compares this Member object with another Member object for order.
@@ -82,4 +86,5 @@ public class Member implements Comparable<Member> {
                 this.homeStudio.toString().toUpperCase() + ", " + this.homeStudio.getZipCode() + ", " +
                 this.homeStudio.getCounty();
     }
+
 }

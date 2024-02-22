@@ -79,6 +79,9 @@ public class Date implements Comparable<Date> {
         return day;
     }
 
+    public void setYear(int year) {
+        this.year = year;
+    }
 
     /**
      * Determines if a date is a valid calendar date
@@ -156,12 +159,5 @@ public class Date implements Comparable<Date> {
     public String toString() {
         return this.month + "/" + this.day + "/" + this.year;
     }
-
-    public static void main(String[] args) {
-        Date test6 = new Date("2/29/2024");
-        System.out.println(test6);
-        System.out.println(test6.isValid());
-    }
-
 
 }
