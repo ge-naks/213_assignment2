@@ -1,5 +1,9 @@
 package club;
 
+/**
+ *
+ *
+ */
 public class Basic extends Member {
     private int numClasses;
 
@@ -10,6 +14,10 @@ public class Basic extends Member {
     // getter
     public int getNumClasses() {
         return this.numClasses;
+    }
+
+    public String guestStatus(){
+        return "not eligible";
     }
 
     public void attendClasses() {

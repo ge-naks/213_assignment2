@@ -3,6 +3,7 @@ package club;
 import java.util.Scanner;
 import java.io.File;
 import java.io.IOException;
+import java.util.StringTokenizer;
 
 public class MemberList {
     private Member[] members; //holds Basic, Family, or Premium objects
@@ -12,15 +13,15 @@ public class MemberList {
     private final int CAPACITY_INCREMENT = 4;
 
     private int find(Member member) {
-        for(int i = 0; i < size; i ++){
-            if(this.members[i].equals(member)) return i;
+        for (int i = 0; i < size; i++) {
+            if (this.members[i].equals(member)) return i;
         }
         return NOT_FOUND;
     }
 
     private void grow() {
         Member[] longer = new Member[size + CAPACITY_INCREMENT];
-        for(int i = 0; i < size; i++){
+        for (int i = 0; i < size; i++) {
             longer[i] = this.members[i];
         }
         this.members = longer;
@@ -31,8 +32,8 @@ public class MemberList {
     }
 
     public boolean add(Member member) {
-        if(this.contains(member)){
-            if(this.size == this.members.length) this.grow();
+        if (this.contains(member)) {
+            if (this.size == this.members.length) this.grow();
             this.size++;
             return true;
         }
@@ -40,7 +41,7 @@ public class MemberList {
     }
 
     public boolean remove(Member member) {
-        if(!this.contains(member)){
+        if (!this.contains(member)) {
             return false;
         }
         int indexToRemove = this.find(member);
@@ -55,16 +56,148 @@ public class MemberList {
     } //shift up to remove
 
     public void load(File file) throws IOException {
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                StringTokenizer tokens = new StringTokenizer(line, " ");
+                parseTokens(tokens);
+            }
+        }
+    }
+
+    public void parseTokens(StringTokenizer tokens) {
+        String planType = tokens.nextToken();
+        switch (planType) {
+            case "B":
+                parseB(tokens);
+                break;
+            case "F":
+                parseF(tokens);
+                break;
+            case "P":
+                parseP(tokens);
+                break;
+            default:
+                System.out.println("Invalid Membership type!");
+
+        }
+    }
+
+    public void parseB(StringTokenizer tokens) {
+        String fname = tokens.nextToken();
+        String lname = tokens.nextToken();
+        Date dob = new Date(tokens.nextToken());
+
+        Profile profile = new Profile(fname, lname, dob);
+
+        Date expire = new Date(tokens.nextToken());
+        Location homeStudio = Location.valueOf(tokens.nextToken());
+
+        Basic newBasic = new Basic(profile, expire, homeStudio);
+
+        this.add(newBasic);
+    }
 
 
-    }//from the text file
+    public void parseF(StringTokenizer tokens) {
+        String fname = tokens.nextToken();
+        String lname = tokens.nextToken();
+        Date dob = new Date(tokens.nextToken());
+
+        Profile profile = new Profile(fname, lname, dob);
+
+        Date expire = new Date(tokens.nextToken());
+        Location homeStudio = Location.valueOf(tokens.nextToken());
+
+        Family newFamily = new Family(profile, expire, homeStudio);
+
+        this.add(newFamily);
+    }
+
+    public void parseP(StringTokenizer tokens) {
+        int numGuests = 0;
+        String fname = tokens.nextToken();
+        String lname = tokens.nextToken();
+        Date dob = new Date(tokens.nextToken());
+
+        Profile profile = new Profile(fname, lname, dob);
+
+        Date expire = new Date(tokens.nextToken());
+        Location homeStudio = Location.valueOf(tokens.nextToken());
+
+        Premium newPremium = new Premium(profile, expire, homeStudio);
+        this.add(newPremium);
+    }
 
     public void printByCounty() {
-    } //sort by county then zip code
+        // Bubble sort implementation
+        for (int i = 0; i < size - 1; i++) {
+            for (int j = 0; j < size - i - 1; j++) {
+                // Compare counties
+                int countyComparison = members[j].getHomeStudio().getCounty().compareTo(members[j + 1].getHomeStudio().getCounty());
+
+                // If counties are the same, compare zip codes
+                if (countyComparison == 0) {
+                    int zipCodeComparison = members[j].getHomeStudio().getZipCode().compareTo(members[j + 1].getHomeStudio().getZipCode());
+                    if (zipCodeComparison > 0) {
+                        // Swap members
+                        Member temp = members[j];
+                        members[j] = members[j + 1];
+                        members[j + 1] = temp;
+                    }
+                } else if (countyComparison > 0) {
+                    // Swap members
+                    Member temp = members[j];
+                    members[j] = members[j + 1];
+                    members[j + 1] = temp;
+                }
+            }
+        }
+
+        // Print the sorted members
+        for (int i = 0; i < size; i++) {
+            System.out.println(members[i]);
+        }
+    }
 
     public void printByMember() {
-    } //sort by member profile
+        // Bubble sort implementation
+        for (int i = 0; i < size - 1; i++) {
+            for (int j = 0; j < size - i - 1; j++) {
+                // Compare member profiles using compareTo method
+                if (members[j].getProfile().compareTo(members[j + 1].getProfile()) > 0) {
+                    // Swap members
+                    Member temp = members[j];
+                    members[j] = members[j + 1];
+                    members[j + 1] = temp;
+                }
+            }
+        }
+        // Print the sorted members
+        for (int i = 0; i < size; i++) {
+            System.out.println(members[i]); // Assuming Member class has a proper toString() method
+        }
+    }
 
     public void printFees() {
-    } //print the array as is with the next due amounts
+        // sample output:
+        // Jerry:Brown:6/30/1979, Membership expires 5/23/2024, Home Studio: EDISON, 08837, MIDDLESEX, (Family) guest-pass remaining: 0
+
+        for(int i = 0; i < size; i ++){
+            System.out.println(this.members[i] + "(" + this.members[i].getClass() + ")" + "guest-pass remaining: " +
+                    this.members[i].guestStatus() + " " + "[next due: " + this.members[i].bill() + "]");
+        }
+
+    }
+
+    public static void main(String[] args) {
+        Date expiry = new Date("6/12/2024");
+        Date dob = new Date("12/14/2003");
+        Profile profile = new Profile("George", "Nakhla", dob );
+        Member member = new Member(profile,expiry,Location.BRIDGEWATER);
+
+
+    }
+
+
 }

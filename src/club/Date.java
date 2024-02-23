@@ -104,17 +104,18 @@ public class Date implements Comparable<Date> {
             return false;
         }
 
-        if (this.getYear() < 1900) return false;
-
-        Calendar todayDate = Calendar.getInstance();
-        int todayYear = todayDate.get(Calendar.YEAR);
-        int todayMonth = todayDate.get(Calendar.MONTH) + 1; // Note: Month is zero-based, so add 1
-        int todayDay = todayDate.get(Calendar.DAY_OF_MONTH);
-
-        Date currentDate = new Date(todayMonth, todayDay, todayYear);
-
-        return this.compareTo(currentDate) != 0 && this.compareTo(currentDate) <= 0;
+        return this.getYear() >= 1900;
     }
+
+    public Date calendarToDate(Calendar calendar){
+        int todayYear = calendar.get(Calendar.YEAR);
+        int todayMonth = calendar.get(Calendar.MONTH) + 1; // Note: Month is zero-based, so add 1
+        int todayDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        return new Date(todayMonth, todayDay, todayYear);
+    }
+
+
 
 
     /**

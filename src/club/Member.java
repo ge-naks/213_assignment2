@@ -34,21 +34,63 @@ public class Member implements Comparable<Member> {
         this.homeStudio = homeStudio;
     }
 
+    public Location getHomeStudio() {
+        return homeStudio;
+
+    }
+
+
+    public Profile getProfile() {
+        return profile;
+    }
+
     /**
      * Calculates and returns the next due amount for the membership.
      *
      * @return The next due amount for the membership.
      */
     public double bill() {
-        Calendar temp = Calendar.getInstance();
-        Date today = new Date(temp.get(Calendar.MONTH), temp.get(Calendar.DAY_OF_MONTH),
-                temp.get(Calendar.YEAR));
-
-        if(today.compareTo(this.expire) > 0) return 0.0; // member already expired, do not bill
-        return 0.0;
+        if (this instanceof Basic) {
+            return ((Basic) this).bill();
+        } else if (this instanceof Family) {
+            return ((Family) this).bill();
+        } else if (this instanceof Premium) {
+            return ((Premium) this).bill();
+        } else {
+            // Default behavior
+            return 0.0;
+        }
     }
 
 
+    public String guestStatus() {
+        if (this instanceof Basic) {
+            return ((Basic) this).guestStatus();
+        } else if (this instanceof Family) {
+            return ((Family) this).guestStatus();
+        } else if (this instanceof Premium) {
+            return ((Premium) this).guestStatus();
+        } else {
+            // Default behavior
+            return "";
+        }
+    }
+
+    public boolean expired(){
+        Calendar today =  Calendar.getInstance();
+        Date asDate = calendarToDate(today);
+
+        // true if today is greater than or equal to today date
+        return  asDate.compareTo(this.expire) >= 0;
+    }
+
+    public Date calendarToDate(Calendar calendar){
+        int todayYear = calendar.get(Calendar.YEAR);
+        int todayMonth = calendar.get(Calendar.MONTH) + 1; // Note: Month is zero-based, so add 1
+        int todayDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        return new Date(todayMonth, todayDay, todayYear);
+    }
 
     /**
      * Compares this Member object with another Member object for order.
@@ -81,10 +123,30 @@ public class Member implements Comparable<Member> {
      * @return A string representation of the Member object.
      */
     public String toString() {
-        return this.profile.toString() + ", Membership expires " +
-                this.expire.toString() + ", Location: " +
+
+        if(!this.expired()) {
+            return this.profile.toString() + ", Membership expires " +
+                    this.expire.toString() + ", Home Studio: " +
+                    this.homeStudio.toString().toUpperCase() + ", " + this.homeStudio.getZipCode() + ", " +
+                    this.homeStudio.getCounty();
+        }
+        return this.profile.toString() + ", Membership expired " +
+                this.expire.toString() + ", Home Studio: " +
                 this.homeStudio.toString().toUpperCase() + ", " + this.homeStudio.getZipCode() + ", " +
                 this.homeStudio.getCounty();
+    }
+
+    public static void main(String[] args) {
+        Date expiry = new Date("6/12/2024");
+        Date dob = new Date("12/14/2003");
+
+
+
+        Profile profile = new Profile("George", "Nakhla", dob );
+        Member member = new Member(profile,expiry,Location.BRIDGEWATER);
+
+        System.out.println(member);
+
     }
 
 }
