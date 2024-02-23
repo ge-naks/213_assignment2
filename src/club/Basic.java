@@ -1,6 +1,5 @@
 package club;
 
-
 public class Basic extends Member {
     private int numClasses;
 

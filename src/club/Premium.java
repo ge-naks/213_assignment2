@@ -26,7 +26,7 @@ public class Premium extends Member {
         // Total fee for 12 months
         double totalFee = PREMIUM_FEE * 12;
         // Subtracting the fee for one month (one month free)
-        totalFee -= monthlyFee;
+        totalFee -= PREMIUM_FEE;
         return totalFee;
     }
 }
