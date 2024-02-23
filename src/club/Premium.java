@@ -1,26 +1,32 @@
 package club;
 
-public class Premium extends Member{
+public class Premium extends Member {
     private int guestPass;
+    private static final int GUEST_PASS_LIMIT = 3;
 
-    public Premium(Profile profile, Date expire, Location homeStudio, int guestPass) {
+    public Premium(Profile profile, Date expire, Location homeStudio) {
         super(profile, expire, homeStudio);
-        this.guestPass = guestPass;
+        guestPass = GUEST_PASS_LIMIT;
     }
 
-    public int getPassOutstanding(){
-        return this.guestPass;
+    public int getGuestPass() {
+        return guestPass;
     }
 
-    public boolean hasMorePass(){
-        return this.guestPass > 0;
+    public void useGuestPass() {
+        if (guestPass > 0) {
+            guestPass--;
+        }
     }
-
-
 
     @Override
     public double bill() {
-        final double PREMIUM_FEE = 59.99;
-        return PREMIUM_FEE;
+        // Monthly fee for Premium membership
+        double PREMIUM_FEE = 59.99;
+        // Total fee for 12 months
+        double totalFee = PREMIUM_FEE * 12;
+        // Subtracting the fee for one month (one month free)
+        totalFee -= monthlyFee;
+        return totalFee;
     }
 }
