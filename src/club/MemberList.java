@@ -9,8 +9,17 @@ public class MemberList {
     private Member[] members; //holds Basic, Family, or Premium objects
     private int size; //number of objects in the array
     private final int NOT_FOUND = -1;
-    private final int INITIAL_CAPACITY = 4;
-    private final int CAPACITY_INCREMENT = 4;
+
+
+    public MemberList(){
+        this.size = 0;
+        int INITIAL_CAPACITY = 4;
+        this.members = new Member[INITIAL_CAPACITY];
+    }
+
+    public int getSize() {
+        return size;
+    }
 
     private int find(Member member) {
         for (int i = 0; i < size; i++) {
@@ -20,6 +29,7 @@ public class MemberList {
     }
 
     private void grow() {
+        int CAPACITY_INCREMENT = 4;
         Member[] longer = new Member[size + CAPACITY_INCREMENT];
         for (int i = 0; i < size; i++) {
             longer[i] = this.members[i];
@@ -32,11 +42,13 @@ public class MemberList {
     }
 
     public boolean add(Member member) {
-        if (this.contains(member)) {
+        if (!this.contains(member)) {
             if (this.size == this.members.length) this.grow();
+            this.members[size] = member;
             this.size++;
             return true;
         }
+        System.out.println("exists already");
         return false;
     }
 
@@ -196,6 +208,16 @@ public class MemberList {
         Profile profile = new Profile("George", "Nakhla", dob );
         Member member = new Member(profile,expiry,Location.BRIDGEWATER);
 
+        MemberList list = new MemberList();
+
+        list.add(member);
+        list.add(member);
+
+        System.out.println(list.size);
+
+        for(int i = 0; i < list.size; i++){
+            System.out.println(list.members[i]);
+        }
 
     }
 
