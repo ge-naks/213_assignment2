@@ -7,4 +7,11 @@ public class FitnessClass {
     private Time time;
     private MemberList members;
     private MemberList guests;
+
+    public FitnessClass(Offer classInfo, Instructor instructor, Location studio, Time time) {
+        this.classInfo = classInfo;
+        this.instructor = instructor;
+        this.studio = studio;
+        this.time = time;
+    }
 }

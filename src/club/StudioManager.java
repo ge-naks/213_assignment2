@@ -26,6 +26,13 @@ public class StudioManager {
             System.out.println("Error loading members." + e);
         }
 
+        try{
+            System.out.println("-Fitness classes loaded-");
+
+        }catch (Exception e){
+            System.out.println("Error loading members." + e);
+        }
+
         while (true) {
             String line = scanner.nextLine().trim(); // Trim to remove leading/trailing whitespace
             if (line.equals("Q")) {

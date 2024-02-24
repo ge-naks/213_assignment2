@@ -1,5 +1,5 @@
 package club;
 
 public enum Offer {
-    Cardio, Pilates, Spinning;
+    CARDIO, PILATES, SPINNING;
 }
