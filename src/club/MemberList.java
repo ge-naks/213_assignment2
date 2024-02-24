@@ -56,8 +56,6 @@ public class MemberList {
         return false;
     }
 
-
-
     public boolean remove(Member member) {
         if (!this.contains(member)) {
             return false;
@@ -95,13 +93,8 @@ public class MemberList {
             case "P":
                 parseP(tokens);
                 break;
-            default:
-                System.out.println("Invalid Membership type!");
-
         }
     }
-
-
 
     public void parseB(StringTokenizer tokens) {
         String fname = tokens.nextToken();
@@ -115,8 +108,6 @@ public class MemberList {
         Location homeStudio = Location.valueOf(tokens.nextToken());
 
         Basic newBasic = new Basic(profile, expire, homeStudio);
-
-        System.out.println(newBasic);
 
         this.add(newBasic);
     }
@@ -133,8 +124,6 @@ public class MemberList {
         Location homeStudio = Location.valueOf(tokens.nextToken());
 
         Family newFamily = new Family(profile, expire, homeStudio);
-
-        System.out.println(newFamily);
 
         this.add(newFamily);
     }
@@ -153,7 +142,6 @@ public class MemberList {
 
         Premium newPremium = new Premium(profile, expire, homeStudio);
 
-        System.out.println(newPremium);
 
         this.add(newPremium);
     }

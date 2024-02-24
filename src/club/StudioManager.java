@@ -8,31 +8,48 @@ import java.util.StringTokenizer;
 public class StudioManager {
     private MemberList list;
     private Scanner scanner;
+    private Schedule schedule;
 
     public StudioManager() {
-        System.out.println("Studio Manager is up running...");
         this.list = new MemberList();
         this.scanner = new Scanner(System.in);
+        this.schedule = new Schedule();
     }
 
     public void run() {
 
         File existingMembers = new File("src/club/memberList.txt");
+        File classSchedule = new File("src/club/classSchedule.txt");
 
         try{
             System.out.println("-list of members loaded-");
             this.list.load(existingMembers);
+
+            for(int i = 0; i < this.list.getSize(); i++){
+                System.out.println(this.list.getMembers()[i]);
+            }
+            System.out.println("-end of list-");
+            System.out.println();
+            System.out.println();
         }catch (Exception e){
             System.out.println("Error loading members." + e);
         }
 
         try{
             System.out.println("-Fitness classes loaded-");
-
+            this.schedule.load(classSchedule);
+            for(int i = 0; i < this.schedule.getNumClasses(); i++){
+                System.out.println(this.schedule.getClasses()[i]);
+            }
+            System.out.println("-end of class list-");
+            System.out.println();
+            System.out.println();
         }catch (Exception e){
             System.out.println("Error loading members." + e);
+
         }
 
+        System.out.println("Studio Manager is up running...");
         while (true) {
             String line = scanner.nextLine().trim(); // Trim to remove leading/trailing whitespace
             if (line.equals("Q")) {
@@ -75,7 +92,6 @@ public class StudioManager {
                 break;
             case "PF":
                 this.list.printFees();
-                //print fees
                 break;
             case "R":
                 // register for class
@@ -148,15 +164,6 @@ public class StudioManager {
             System.out.println(fname + " " + lname + " is already in the member database.");
         }
     }
-
-
-
-
-
-
-
-
-
 
     private void parseAF(StringTokenizer tokens) {
         if (tokens.countTokens() < 4) {
@@ -258,6 +265,35 @@ private void parseC(StringTokenizer tokens) {
             System.out.println(fname + " " + lname + " is not in the member database.");
         }
     }
+}
+
+public void parseR(StringTokenizer tokens){
+        //check class, location, membership y/n, expired y/n, class not on schedule, basic member home studio,
+        // time conflict, member already in schedule
+
+    //check class
+    String strOffer = tokens.nextToken();
+
+    if(!Offer.tryOffer(strOffer)){
+        System.out.println(strOffer + " - class name does not exist.");
+        return;
+    }
+    String strLocation = tokens.nextToken();
+    if(!Location.tryLocation(strLocation)){
+        System.out.println(strLocation + " - invalid studio location.");
+        return;
+    }
+    String strInstructor = tokens.nextToken();
+
+    if(!Instructor.tryInstructor(strInstructor)){
+        System.out.println(strInstructor + " - instructor does not exist.");
+        return;
+    }
+
+    if(Schedule.)
+
+
+
 }
 
 

@@ -1,6 +1,6 @@
 package club;
 
-public class FitnessClass {
+public class FitnessClass implements Comparable<FitnessClass> {
     private Offer classInfo;
     private Instructor instructor;
     private Location studio;
@@ -14,4 +14,32 @@ public class FitnessClass {
         this.studio = studio;
         this.time = time;
     }
+
+    public Offer getClassInfo() {
+        return classInfo;
+    }
+
+    public Instructor getInstructor() {
+        return instructor;
+    }
+
+    public Location getStudio() {
+        return studio;
+    }
+
+    @Override
+    public String toString(){
+        return  this.classInfo + " - " + this.instructor + ", " + this.time + ", "
+                + this.studio;
+    }
+
+    public boolean equals(){
+        return true;
+    }
+
+    public int compareTo(FitnessClass fitnessClass){
+        return 0;
+    }
+
+
 }

@@ -62,7 +62,6 @@ public class Member implements Comparable<Member> {
         }
     }
 
-
     public String guestStatus() {
         if (this instanceof Basic) {
             return ((Basic) this).guestStatus();

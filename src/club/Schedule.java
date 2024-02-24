@@ -10,7 +10,19 @@ public class Schedule {
     private int numClasses;
 
     public Schedule() {
+        final int NUM_CLASSES_FILE = 15;
 
+        this.classes = new FitnessClass[NUM_CLASSES_FILE];
+        this.numClasses = 0;
+    }
+
+
+    public FitnessClass[] getClasses() {
+        return classes;
+    }
+
+    public int getNumClasses() {
+        return numClasses;
     }
 
     public void load(File file) throws IOException {
@@ -26,33 +38,22 @@ public class Schedule {
 
     private void parseTokens(StringTokenizer tokens) {
         if (tokens.countTokens() >= 4) {
-            String className = tokens.nextToken(); // Fitness class name
-            String instructor = tokens.nextToken(); // Instructor name
-            String timeStr = tokens.nextToken(); // Time string
-            String location = tokens.nextToken(); // Location
+            Offer offer = Offer.valueOf(tokens.nextToken().toUpperCase());
+            Instructor instructor = Instructor.valueOf(tokens.nextToken());
+            Time time =  Time.valueOf(tokens.nextToken().toUpperCase());
+            Location location =  Location.valueOf(tokens.nextToken().toUpperCase()); // Location
 
-            // Convert time string to Time enum
-            Time time;
-            switch (timeStr.toLowerCase()) {
-                case "morning":
-                    time = Time.MORNING;
-                    break;
-                case "afternoon":
-                    time = Time.AFTERNOON;
-                    break;
-                case "evening":
-                    time = Time.EVENING;
-                    break;
-                default:
-                    throw new IllegalArgumentException("Invalid time: " + timeStr);
-            }
+            FitnessClass newClass = new FitnessClass(offer, instructor, location, time);
 
-            // Create FitnessClass object and store it or do further processing
-            FitnessClass fitnessClass = new FitnessClass(Offer.valueOf(className), Instructor.valueOf(instructor),
-                    Location.valueOf(location), time);
-            // You can store fitnessClass or do something else with it
-        } else {
-            System.err.println("Invalid line: " + tokens.toString());
+
+            this.classes[this.numClasses] = newClass;
+            this.numClasses++;
+        }
+    }
+
+    public boolean validClassStudio(Location location, Offer offer, Instructor instructor){
+        for(int i = 0; i < this.numClasses; i++){
+            if(this.classes[i].getClassInfo() != this.)
         }
     }
 
