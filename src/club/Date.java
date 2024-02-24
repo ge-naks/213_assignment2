@@ -1,4 +1,5 @@
 package club;
+
 import java.util.Calendar;
 import java.util.StringTokenizer;
 
@@ -7,7 +8,6 @@ import java.util.StringTokenizer;
  * date and compare dates.
  *
  * @author George W Nakhla
- *
  */
 public class Date implements Comparable<Date> {
     private int year;
@@ -19,6 +19,7 @@ public class Date implements Comparable<Date> {
      * Empty date constructor, initializes all values to 0.
      */
     public Date() {
+
     }
 
 
@@ -43,13 +44,12 @@ public class Date implements Comparable<Date> {
      */
     public Date(String stringDate) {
         // mm/dd/yyyy format
-        StringTokenizer tokenizer = new StringTokenizer(stringDate ,"/");
+        StringTokenizer tokenizer = new StringTokenizer(stringDate, "/");
+
         this.month = Integer.parseInt(tokenizer.nextToken());
         this.day = Integer.parseInt(tokenizer.nextToken());
         this.year = Integer.parseInt(tokenizer.nextToken());
-
     }
-
 
 
     /**
@@ -107,15 +107,13 @@ public class Date implements Comparable<Date> {
         return this.getYear() >= 1900;
     }
 
-    public Date calendarToDate(Calendar calendar){
+    public Date calendarToDate(Calendar calendar) {
         int todayYear = calendar.get(Calendar.YEAR);
         int todayMonth = calendar.get(Calendar.MONTH) + 1; // Note: Month is zero-based, so add 1
         int todayDay = calendar.get(Calendar.DAY_OF_MONTH);
 
         return new Date(todayMonth, todayDay, todayYear);
     }
-
-
 
 
     /**
@@ -142,7 +140,7 @@ public class Date implements Comparable<Date> {
      * @return true if the dates are equal, false otherwise
      */
 
-    public boolean equals(Date date){
+    public boolean equals(Date date) {
         if (this.year != date.year) {
             return false;
         }

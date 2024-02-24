@@ -40,7 +40,7 @@ public class Profile implements Comparable<Profile> {
         return this.dob;
     }
 
-    public boolean isValid(){
+    public boolean validDOB(){
         Calendar today = Calendar.getInstance();
         Date todayAsDate = new Date(today.get(Calendar.MONTH) + 1, today.get(Calendar.DAY_OF_YEAR), today.get(Calendar.YEAR));
 
@@ -60,8 +60,8 @@ public class Profile implements Comparable<Profile> {
      */
     @Override
     public int compareTo(Profile profile) {
-        if (!this.fname.equals(profile.fname)) return this.fname.compareTo(profile.fname);
-        if (!this.lname.equals(profile.lname)) return this.lname.compareTo(profile.lname);
+        if (!this.fname.equalsIgnoreCase(profile.fname)) return this.fname.compareToIgnoreCase(profile.fname);
+        if (!this.lname.equalsIgnoreCase(profile.lname)) return this.lname.compareToIgnoreCase(profile.lname);
         return this.dob.compareTo(profile.dob);
     }
 
@@ -73,8 +73,8 @@ public class Profile implements Comparable<Profile> {
      * @return true if the objects are equal, false otherwise.
      */
     public boolean equals(Profile profile) {
-        if (!this.fname.equals(profile.fname)) return false;
-        if (!this.lname.equals(profile.lname)) return false;
+        if (!this.fname.equalsIgnoreCase(profile.fname)) return false;
+        if (!this.lname.equalsIgnoreCase(profile.lname)) return false;
         return this.dob.equals(profile.dob);
     }
 
@@ -86,6 +86,10 @@ public class Profile implements Comparable<Profile> {
      */
     public String toString() {
         return this.fname + ":" + this.lname + ":" + this.dob.toString();
+    }
+
+    public static void main(String[] args) {
+
     }
 }
 

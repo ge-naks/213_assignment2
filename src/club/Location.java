@@ -21,6 +21,14 @@ public enum Location {
         this.county = county;
     }
 
+    public static boolean tryLocation(String location){
+        try {
+            Location.valueOf(location);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
 
 
     /**

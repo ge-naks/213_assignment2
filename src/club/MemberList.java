@@ -21,6 +21,10 @@ public class MemberList {
         return size;
     }
 
+    public Member[] getMembers() {
+        return members;
+    }
+
     private int find(Member member) {
         for (int i = 0; i < size; i++) {
             if (this.members[i].equals(member)) return i;
@@ -42,15 +46,17 @@ public class MemberList {
     }
 
     public boolean add(Member member) {
+        if(!member.getProfile().validDOB()) return false;
         if (!this.contains(member)) {
             if (this.size == this.members.length) this.grow();
             this.members[size] = member;
             this.size++;
             return true;
         }
-        System.out.println("exists already");
         return false;
     }
+
+
 
     public boolean remove(Member member) {
         if (!this.contains(member)) {
@@ -95,12 +101,15 @@ public class MemberList {
         }
     }
 
+
+
     public void parseB(StringTokenizer tokens) {
         String fname = tokens.nextToken();
         String lname = tokens.nextToken();
         Date dob = new Date(tokens.nextToken());
 
         Profile profile = new Profile(fname, lname, dob);
+
 
         Date expire = new Date(tokens.nextToken());
         Location homeStudio = Location.valueOf(tokens.nextToken());
@@ -133,6 +142,7 @@ public class MemberList {
         Date dob = new Date(tokens.nextToken());
 
         Profile profile = new Profile(fname, lname, dob);
+
 
         Date expire = new Date(tokens.nextToken());
         Location homeStudio = Location.valueOf(tokens.nextToken());
@@ -211,14 +221,15 @@ public class MemberList {
         MemberList list = new MemberList();
 
         list.add(member);
+        list.remove(member);
         list.add(member);
+
 
         System.out.println(list.size);
 
-        for(int i = 0; i < list.size; i++){
+        for(int i = 0; i < 4; i++){
             System.out.println(list.members[i]);
         }
-
     }
 
 
