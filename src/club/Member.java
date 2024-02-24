@@ -84,6 +84,10 @@ public class Member implements Comparable<Member> {
         return  asDate.compareTo(this.expire) >= 0;
     }
 
+    public Member(Profile profile) {
+        this.profile = profile;
+    }
+
     public Date calendarToDate(Calendar calendar){
         int todayYear = calendar.get(Calendar.YEAR);
         int todayMonth = calendar.get(Calendar.MONTH) + 1; // Note: Month is zero-based, so add 1

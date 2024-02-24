@@ -27,7 +27,7 @@ public class MemberList {
 
     private int find(Member member) {
         for (int i = 0; i < size; i++) {
-            if (this.members[i].equals(member)) return i;
+            if (this.members[i].getProfile().equals(member.getProfile())) return i;
         }
         return NOT_FOUND;
     }
@@ -116,6 +116,8 @@ public class MemberList {
 
         Basic newBasic = new Basic(profile, expire, homeStudio);
 
+        System.out.println(newBasic);
+
         this.add(newBasic);
     }
 
@@ -131,6 +133,8 @@ public class MemberList {
         Location homeStudio = Location.valueOf(tokens.nextToken());
 
         Family newFamily = new Family(profile, expire, homeStudio);
+
+        System.out.println(newFamily);
 
         this.add(newFamily);
     }
@@ -148,6 +152,9 @@ public class MemberList {
         Location homeStudio = Location.valueOf(tokens.nextToken());
 
         Premium newPremium = new Premium(profile, expire, homeStudio);
+
+        System.out.println(newPremium);
+
         this.add(newPremium);
     }
 

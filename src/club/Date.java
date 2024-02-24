@@ -46,9 +46,15 @@ public class Date implements Comparable<Date> {
         // mm/dd/yyyy format
         StringTokenizer tokenizer = new StringTokenizer(stringDate, "/");
 
-        this.month = Integer.parseInt(tokenizer.nextToken());
-        this.day = Integer.parseInt(tokenizer.nextToken());
-        this.year = Integer.parseInt(tokenizer.nextToken());
+        try{
+            this.month = Integer.parseInt(tokenizer.nextToken());
+            this.day = Integer.parseInt(tokenizer.nextToken());
+            this.year = Integer.parseInt(tokenizer.nextToken());
+        }catch (Exception e){
+
+        }
+
+
     }
 
 
@@ -81,6 +87,19 @@ public class Date implements Comparable<Date> {
 
     public void setYear(int year) {
         this.year = year;
+    }
+
+    public static boolean tryDate(String strDate){
+        StringTokenizer tokenizer = new StringTokenizer(strDate, "/");
+        try {
+            int month = Integer.parseInt(tokenizer.nextToken());
+            int day = Integer.parseInt(tokenizer.nextToken());
+            int year = Integer.parseInt(tokenizer.nextToken());
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+
     }
 
     /**
