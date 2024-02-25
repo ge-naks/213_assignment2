@@ -126,6 +126,20 @@ public class Date implements Comparable<Date> {
         return this.getYear() >= 1900;
     }
 
+    public boolean isFuture() {
+        Calendar checkDate = Calendar.getInstance();
+        checkDate.setLenient(false); // Disable leniency (to strictly enforce date validity)
+
+        checkDate.set(Calendar.YEAR, this.year);
+        checkDate.set(Calendar.MONTH, this.month - 1); // Note: Month is zero-based, so subtract 1 from our 1 indexed date
+        checkDate.set(Calendar.DAY_OF_MONTH, this.day);
+
+        Calendar currentDate = Calendar.getInstance(); // Current date
+
+        // Check if the date is in the future
+        return checkDate.after(currentDate);
+    }
+
     public Date calendarToDate(Calendar calendar) {
         int todayYear = calendar.get(Calendar.YEAR);
         int todayMonth = calendar.get(Calendar.MONTH) + 1; // Note: Month is zero-based, so add 1

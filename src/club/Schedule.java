@@ -1,5 +1,6 @@
 package club;
 
+import javax.print.attribute.standard.NumberOfDocuments;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
@@ -17,6 +18,8 @@ public class Schedule {
     }
 
 
+
+
     public FitnessClass[] getClasses() {
         return classes;
     }
@@ -26,6 +29,7 @@ public class Schedule {
     }
 
     public void load(File file) throws IOException {
+        final int NOT_FOUND = -1;
         try (Scanner scanner = new Scanner(file)) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
@@ -34,6 +38,22 @@ public class Schedule {
             }
         }
     }
+
+    public int findClass(Time time, Instructor instructor){
+        final int NOT_FOUND = -1;
+        for(int i = 0; i < this.numClasses; i++){
+            if(this.classes[i].getInstructor() == instructor && this.classes[i].getTime() == time){
+                return i;
+            }
+        }
+        return NOT_FOUND;
+    }
+
+    public boolean addMemberToClass(Member member, Time time, Instructor instructor){
+        int index = findClass(time, instructor);
+        return this.classes[index].addMember(member);
+    }
+
 
     private void parseTokens(StringTokenizer tokens) {
         if (tokens.countTokens() >= 4) {
@@ -70,16 +90,6 @@ public class Schedule {
         return null; // If no matching class is found, return null
     }
 
-    public boolean hasTimeConflict(Member member, Time time) {
-        for (FitnessClass fitnessClass : classes) {
-            if (fitnessClass.getMembers().contains(member)) {
-                if (fitnessClass.getTime() == time) {
-                    return true; // Time conflict found
-                }
-            }
-        }
-        return false; // No time conflict found
-    }
 
 
 

@@ -1,5 +1,7 @@
 package club;
 
+import org.w3c.dom.ls.LSOutput;
+
 import java.io.File;
 import java.util.Calendar;
 import java.util.Scanner;
@@ -85,7 +87,11 @@ public class StudioManager {
                 break;
             case "PM":
                 //to display the members sorted by member profiles
+                System.out.println();
+                System.out.println("-list of members sorted by member profiles-");
                 this.list.printByMember();
+                System.out.println("-end of list-");
+                System.out.println();
                 break;
             case "PC":
                 this.list.printByCounty();
@@ -126,6 +132,8 @@ public class StudioManager {
         return new Date(todayMonth, todayDay, todayYear);
     }
 
+
+
     private void parseAB(StringTokenizer tokens) {
         if (tokens.countTokens() < 4) {
             System.out.println("Missing data tokens.");
@@ -140,7 +148,9 @@ public class StudioManager {
         }
         Date dob = new Date(strDate);
         Profile profile = new Profile(fname, lname, dob);
-        String strHomeStudio = tokens.nextToken().toUpperCase();
+        String strHomeStudio = tokens.nextToken();
+
+
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MONTH, 1);
         Date expire = calendarToDate(cal);
@@ -152,11 +162,16 @@ public class StudioManager {
             System.out.println("DOB " + dob + ": invalid calendar date!");
             return;
         }
+        if(dob.isFuture()){
+            System.out.println("DOB " + dob + ": cannot be today or a future date!");
+            return;
+        }
+
         if (!profile.validDOB() && dob.isValid()) {
             System.out.println("DOB " + dob + ": must be 18 or older to join!");
             return;
         }
-        Location homeStudio = Location.valueOf(strHomeStudio);
+        Location homeStudio = Location.valueOf(strHomeStudio.toUpperCase());
         Basic newBasic = new Basic(profile, expire, homeStudio);
         if (this.list.add(newBasic)) {
             System.out.println(fname + " " + lname + " added.");
@@ -179,7 +194,7 @@ public class StudioManager {
         }
         Date dob = new Date(strDate);
         Profile profile = new Profile(fname, lname, dob);
-        String strHomeStudio = tokens.nextToken().toUpperCase();
+        String strHomeStudio = tokens.nextToken();
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MONTH, 3);
         Date expire = calendarToDate(cal);
@@ -195,7 +210,7 @@ public class StudioManager {
             System.out.println("DOB " + dob + ": must be 18 or older to join!");
             return;
         }
-        Location homeStudio = Location.valueOf(strHomeStudio);
+        Location homeStudio = Location.valueOf(strHomeStudio.toUpperCase());
         Family newFamily = new Family(profile, expire, homeStudio);
         if (this.list.add(newFamily)) {
             System.out.println(fname + " " + lname + " added.");
@@ -218,7 +233,7 @@ public class StudioManager {
         }
         Date dob = new Date(strDate);
         Profile profile = new Profile(fname, lname, dob);
-        String strHomeStudio = tokens.nextToken().toUpperCase();
+        String strHomeStudio = tokens.nextToken();
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MONTH, 11);
         Date expire = calendarToDate(cal);
@@ -234,7 +249,7 @@ public class StudioManager {
             System.out.println("DOB " + dob + ": must be 18 or older to join!");
             return;
         }
-        Location homeStudio = Location.valueOf(strHomeStudio);
+        Location homeStudio = Location.valueOf(strHomeStudio.toUpperCase());
         Premium newPremium = new Premium(profile, expire, homeStudio);
         if (this.list.add(newPremium)) {
             System.out.println(fname + " " + lname + " added.");
@@ -268,25 +283,24 @@ public class StudioManager {
     }
 
     public void parseR(StringTokenizer tokens) {
-        String strOffer = tokens.nextToken().toUpperCase();
+        String strOffer = tokens.nextToken();
         String strInstructor = tokens.nextToken();
-        String strLocation = tokens.nextToken().toUpperCase();
+        String strLocation = tokens.nextToken();
         String fname = tokens.nextToken();
         String lname = tokens.nextToken();
         Date dob = new Date(tokens.nextToken());
         Profile profile = new Profile(fname, lname, dob);
 
-        Member dummyMember = new Member(profile, dob, Location.EDISON);
-
         if (!Offer.tryOffer(strOffer)) {
             System.out.println(strOffer + " - class name does not exist.");
             return;
         }
-        Offer offer = Offer.valueOf(strOffer);
+        Offer offer = Offer.valueOf(strOffer.toUpperCase());
         if (!Location.tryLocation(strLocation)) {
             System.out.println(strLocation + " - invalid studio location.");
             return;
         }
+        Location location = Location.valueOf(strLocation.toUpperCase());
         if (!Instructor.tryInstructor(strInstructor)) {
             System.out.println(strInstructor + " - instructor does not exist.");
             return;
@@ -297,7 +311,6 @@ public class StudioManager {
                     location);
             return;
         }
-        Location location = Location.valueOf(strLocation);
         if (!this.list.foundProfile(profile)) {
             System.out.println(fname + " " + lname + " " + dob + " is not in the member database.");
             return;
@@ -305,26 +318,57 @@ public class StudioManager {
         int index = this.list.findProfileIndex(profile);
         Member member = this.list.getMembers()[index];
         if (member.expired()) {
-            System.out.println(fname + " " + lname + " " + member.getExpire() + " membership expired.");
+            System.out.println(fname + " " + lname + " " + member.getProfile().getDob() + " membership expired.");
+        }
+        if (schedule.findClassTime(instructor, offer) == null) {
+            System.out.println("Idk the proper error msg");
+            return;
         }
 
-        if(schedule.findClassTime(instructor, offer) == null){
-            
+        Time time = schedule.findClassTime(instructor, offer);
+
+        if(alreadyInClass(time, instructor, member)){
+            System.out.println(fname + " " + lname + " is already in the class.");
+            return;
+        }
+        if (findTimeConflict(member, time, location, instructor)) {
+            return;
         }
 
         if (member.getHomeStudio() != location) {
             System.out.println(fname + " " + lname + " is attending a class at " + location +
-                    " - [BASIC] home studio at " + member.getHomeStudio());
+                    " - [BASIC] home studio at " + member.getHomeStudio().getCounty());
+            return;
         }
 
 
 
-
-
+        if(this.schedule.addMemberToClass(member,time,instructor)){
+            System.out.println(fname + " " + lname + " attendance recorded " + offer + " at " +
+                    location);
+        }
 
     }
 
+    public boolean alreadyInClass(Time time, Instructor instructor, Member member){
+        int index = this.schedule.findClass(time, instructor);
+        return this.schedule.getClasses()[index].getMembers().contains(member);
+    }
 
+    public boolean findTimeConflict(Member member, Time time, Location location, Instructor instructor) {
+        for (FitnessClass fitnessClass : schedule.getClasses()) {
+            if (fitnessClass.getMembers().contains(member)) {
+                if (fitnessClass.getTime() == time) {
+
+                    System.out.println("Time conflict - " + member.getProfile().getFname() + " " +
+                            member.getProfile().getLname() + " is in another class held at " + time.getTime() +
+                            " - " + instructor.toString().toUpperCase() + ", " + time.getTime() + ", " + location.getCounty());
+                    return true; //conflict exists
+                }
+            }
+        }
+        return false;
+    }
 
 
 }

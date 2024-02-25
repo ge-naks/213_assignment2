@@ -18,4 +18,12 @@ public enum Time {
     public int getMinute() {
         return minute;
     }
+
+    public String getTime() {
+        String hourString = (hour < 10) ? "0" + hour : String.valueOf(hour);
+        String minuteString = (minute < 10) ? "0" + minute : String.valueOf(minute);
+        return hourString + ":" + minuteString;
+    }
 }
+
+

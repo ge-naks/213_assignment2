@@ -1,6 +1,6 @@
 package club;
 
-public class FitnessClass{
+public class FitnessClass {
     private Offer classInfo;
     private Instructor instructor;
     private Location studio;
@@ -13,6 +13,8 @@ public class FitnessClass{
         this.instructor = instructor;
         this.studio = studio;
         this.time = time;
+        this.members = new MemberList(); // Initialize members list
+        this.guests = new MemberList();  // Initialize guests list
     }
 
     public Offer getClassInfo() {
@@ -23,12 +25,12 @@ public class FitnessClass{
         return instructor;
     }
 
-    public MemberList getGuests() {
-        return guests;
-    }
-
     public Time getTime() {
         return time;
+    }
+
+    public MemberList getGuests() {
+        return guests;
     }
 
     public MemberList getMembers() {
@@ -39,5 +41,17 @@ public class FitnessClass{
         return studio;
     }
 
+    public boolean addMember(Member member){
+        return this.members.add(member);
+
+    }
+
+
+
+    @Override
+    public String toString() {
+        return this.classInfo + " - " + this.instructor + ", " + this.time + ", "
+                + this.studio;
+    }
 
 }

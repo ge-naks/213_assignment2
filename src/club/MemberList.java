@@ -15,6 +15,7 @@ public class MemberList {
         this.size = 0;
         int INITIAL_CAPACITY = 4;
         this.members = new Member[INITIAL_CAPACITY];
+
     }
 
     public int getSize() {
@@ -161,6 +162,8 @@ public class MemberList {
         this.add(newPremium);
     }
 
+
+
     public void printByCounty() {
         // Bubble sort implementation
         for (int i = 0; i < size - 1; i++) {
@@ -186,6 +189,7 @@ public class MemberList {
             }
         }
 
+
         // Print the sorted members
         for (int i = 0; i < size; i++) {
             System.out.println(members[i]);
@@ -196,8 +200,14 @@ public class MemberList {
         // Bubble sort implementation
         for (int i = 0; i < size - 1; i++) {
             for (int j = 0; j < size - i - 1; j++) {
-                // Compare member profiles using compareTo method
-                if (members[j].getProfile().compareTo(members[j + 1].getProfile()) > 0) {
+                // Compare member profiles using last names
+                int lastNameComparison = members[j].getProfile().getLname().compareToIgnoreCase(members[j + 1].getProfile().getLname());
+                if (lastNameComparison > 0 ||
+                        (lastNameComparison == 0 &&
+                                members[j].getProfile().getFname().compareToIgnoreCase(members[j + 1].getProfile().getFname()) > 0) ||
+                        (lastNameComparison == 0 &&
+                                members[j].getProfile().getFname().equalsIgnoreCase(members[j + 1].getProfile().getFname()) &&
+                                members[j].getProfile().getDob().compareTo(members[j + 1].getProfile().getDob()) > 0)) {
                     // Swap members
                     Member temp = members[j];
                     members[j] = members[j + 1];
@@ -210,6 +220,7 @@ public class MemberList {
             System.out.println(members[i]); // Assuming Member class has a proper toString() method
         }
     }
+
 
     public void printFees() {
         // sample output:

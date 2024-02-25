@@ -40,13 +40,27 @@ public class Profile implements Comparable<Profile> {
         return this.dob;
     }
 
+    public String getFname() {
+        return fname;
+    }
+
+    public String getLname() {
+        return lname;
+    }
+
     public boolean validDOB(){
         Calendar today = Calendar.getInstance();
-        Date todayAsDate = new Date(today.get(Calendar.MONTH) + 1, today.get(Calendar.DAY_OF_YEAR), today.get(Calendar.YEAR));
+        int currentYear = today.get(Calendar.YEAR);
+        int currentMonth = today.get(Calendar.MONTH) + 1;
 
         Date dob = this.getDob();
 
-        return dob.getYear() + 18 <= todayAsDate.getYear() && dob.getMonth() <= todayAsDate.getYear();
+        int age = currentYear - dob.getYear();
+        if (dob.getMonth() > currentMonth || (dob.getMonth() == currentMonth && dob.getDay() > today.get(Calendar.DAY_OF_MONTH))) {
+            age--; // Reduce age if the birthday hasn't occurred yet this year
+        }
+
+        return age >= 18;
 
     }
 
@@ -73,8 +87,8 @@ public class Profile implements Comparable<Profile> {
      * @return true if the objects are equal, false otherwise.
      */
     public boolean equals(Profile profile) {
-        if (!this.fname.equalsIgnoreCase(profile.fname)) return false;
         if (!this.lname.equalsIgnoreCase(profile.lname)) return false;
+        if (!this.fname.equalsIgnoreCase(profile.fname)) return false;
         return this.dob.equals(profile.dob);
     }
 

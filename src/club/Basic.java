@@ -33,4 +33,7 @@ public class Basic extends Member {
         }
         return totalBasicFee;
     }
+    public String toString() {
+        return super.toString() + ", (Basic) number of classes attended: " + numClasses;
+    }
 }

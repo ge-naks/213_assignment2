@@ -28,4 +28,14 @@ public class Family extends Member {
         final double FAMILY_FEE = 49.99;
         return FAMILY_FEE * NUM_MONTHS;
     }
+    public String toString() {
+        String membershipType = "(Family) guest-pass remaining: ";
+        if (expired()) {
+            membershipType += "not eligible";
+        } else {
+            membershipType += !guest ? "1" : "0";
+        }
+        return super.toString() + ", " + membershipType;
+    }
+
 }

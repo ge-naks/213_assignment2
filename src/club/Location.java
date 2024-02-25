@@ -8,7 +8,7 @@ package club;
 public enum Location {
 
     BRIDGEWATER("08807", "SOMERSET"),
-    EDISON("08873", "MIDDLESEX"),
+    EDISON("08837", "MIDDLESEX"),
     FRANKLIN("08873", "SOMERSET"),
     PISCATAWAY("08854", "MIDDLESEX"),
     SOMERVILLE("08876", "SOMERSET");
@@ -23,7 +23,7 @@ public enum Location {
 
     public static boolean tryLocation(String location){
         try {
-            Location.valueOf(location);
+            Location.valueOf(location.toUpperCase());
             return true;
         } catch (IllegalArgumentException e) {
             return false;
@@ -52,4 +52,10 @@ public enum Location {
     public String getCounty() {
         return county;
     }
+    @Override
+    public String toString() {
+        return name() + ", " + getZipCode() + ", " + getCounty();
+    }
+
+
 }

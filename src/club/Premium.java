@@ -2,7 +2,6 @@ package club;
 
 public class Premium extends Member{
     private int guestPass;
-
     private final int MAX_GUESTS = 3;
 
     public Premium(Profile profile, Date expire, Location homeStudio) {
@@ -38,5 +37,19 @@ public String guestStatus(){
         final int NUM_MONTHS = 11;
         final double PREMIUM_FEE = 59.99;
         return PREMIUM_FEE * NUM_MONTHS;
+    }
+    public String toString() {
+        String membershipType;
+        if (!expired()) {
+            membershipType = "(Premium) guest-pass remaining: ";
+            if (guestPass == MAX_GUESTS) {
+                membershipType += "0";
+            } else {
+                membershipType += (MAX_GUESTS - guestPass);
+            }
+        } else {
+            membershipType = "(Premium) guest-pass remaining: not eligible";
+        }
+        return super.toString() + ", " + membershipType;
     }
 }

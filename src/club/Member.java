@@ -109,9 +109,7 @@ public class Member implements Comparable<Member> {
      */
     @Override
     public int compareTo(Member member) {
-        if (!this.profile.equals(member.profile)) return this.profile.compareTo(member.profile);
-        if (!this.expire.equals(member.expire)) return this.expire.compareTo(member.expire);
-        return this.homeStudio.compareTo(member.homeStudio);
+        return this.profile.compareTo(member.profile);
     }
 
     /**
