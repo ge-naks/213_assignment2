@@ -21,6 +21,8 @@ public class Member implements Comparable<Member> {
 
     }
 
+
+
     /**
      * Parameterized constructor for the Member class.
      *
@@ -73,6 +75,10 @@ public class Member implements Comparable<Member> {
             // Default behavior
             return "";
         }
+    }
+
+    public Date getExpire() {
+        return expire;
     }
 
     public boolean expired(){

@@ -32,6 +32,21 @@ public class MemberList {
         return NOT_FOUND;
     }
 
+    public int findProfileIndex(Profile profile) {
+        for (int i = 0; i < size; i++) {
+            if (this.members[i].getProfile().equals(profile)) return i;
+        }
+        return NOT_FOUND;
+    }
+
+
+    public boolean foundProfile(Profile profile){
+        for (int i = 0; i < size; i++) {
+            if (this.members[i].getProfile().equals(profile)) return true;
+        }
+        return false;
+    }
+
     private void grow() {
         int CAPACITY_INCREMENT = 4;
         Member[] longer = new Member[size + CAPACITY_INCREMENT];

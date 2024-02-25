@@ -35,7 +35,6 @@ public class Schedule {
         }
     }
 
-
     private void parseTokens(StringTokenizer tokens) {
         if (tokens.countTokens() >= 4) {
             Offer offer = Offer.valueOf(tokens.nextToken().toUpperCase());
@@ -53,8 +52,36 @@ public class Schedule {
 
     public boolean validClassStudio(Location location, Offer offer, Instructor instructor){
         for(int i = 0; i < this.numClasses; i++){
-            if(this.classes[i].getClassInfo() != this.)
+            if(this.classes[i].getClassInfo() != offer ||this.classes[i].getInstructor() != instructor ||
+                    this.classes[i].getStudio() != location){
+                return false;
+            }
         }
+        return true;
     }
+
+
+    public Time findClassTime(Instructor instructor, Offer offer) {
+        for (FitnessClass fitnessClass : classes) {
+            if (fitnessClass.getInstructor().equals(instructor) && fitnessClass.getClassInfo().equals(offer)) {
+                return fitnessClass.getTime(); // Return the time of the class
+            }
+        }
+        return null; // If no matching class is found, return null
+    }
+
+    public boolean hasTimeConflict(Member member, Time time) {
+        for (FitnessClass fitnessClass : classes) {
+            if (fitnessClass.getMembers().contains(member)) {
+                if (fitnessClass.getTime() == time) {
+                    return true; // Time conflict found
+                }
+            }
+        }
+        return false; // No time conflict found
+    }
+
+
+
 
 }

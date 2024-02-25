@@ -6,7 +6,7 @@ public enum Instructor {
 
     public static boolean tryInstructor(String instructor){
         try {
-            Location.valueOf(instructor);
+            Instructor.valueOf(instructor);
             return true;
         } catch (IllegalArgumentException e) {
             return false;

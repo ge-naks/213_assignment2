@@ -5,7 +5,7 @@ public enum Offer {
 
     public static boolean tryOffer(String offer){
         try {
-            Location.valueOf(offer);
+            Offer.valueOf(offer.toUpperCase());
             return true;
         } catch (IllegalArgumentException e) {
             return false;

@@ -21,30 +21,30 @@ public class StudioManager {
         File existingMembers = new File("src/club/memberList.txt");
         File classSchedule = new File("src/club/classSchedule.txt");
 
-        try{
+        try {
             System.out.println("-list of members loaded-");
             this.list.load(existingMembers);
 
-            for(int i = 0; i < this.list.getSize(); i++){
+            for (int i = 0; i < this.list.getSize(); i++) {
                 System.out.println(this.list.getMembers()[i]);
             }
             System.out.println("-end of list-");
             System.out.println();
             System.out.println();
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Error loading members." + e);
         }
 
-        try{
+        try {
             System.out.println("-Fitness classes loaded-");
             this.schedule.load(classSchedule);
-            for(int i = 0; i < this.schedule.getNumClasses(); i++){
+            for (int i = 0; i < this.schedule.getNumClasses(); i++) {
                 System.out.println(this.schedule.getClasses()[i]);
             }
             System.out.println("-end of class list-");
             System.out.println();
             System.out.println();
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Error loading members." + e);
 
         }
@@ -94,7 +94,7 @@ public class StudioManager {
                 this.list.printFees();
                 break;
             case "R":
-                // register for class
+                parseR(tokens);
                 break;
             case "U":
                 // remove from class
@@ -106,7 +106,7 @@ public class StudioManager {
                 // deregister guest for class
                 break;
             case "t":
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < this.list.getSize(); i++) {
                     Member[] temp = this.list.getMembers();
                     System.out.println(temp[i]);
                 }
@@ -243,60 +243,86 @@ public class StudioManager {
         }
     }
 
-private void parseC(StringTokenizer tokens) {
-    if (tokens.countTokens() < 3) {
-        System.out.println("Missing data tokens.");
-    } else {
+    private void parseC(StringTokenizer tokens) {
+        if (tokens.countTokens() < 3) {
+            System.out.println("Missing data tokens.");
+        } else {
+            String fname = tokens.nextToken();
+            String lname = tokens.nextToken();
+            String strDate = tokens.nextToken();
+            if (!Date.tryDate(strDate)) {
+                System.out.println("The date contains characters.");
+                return;
+            }
+            Date dob = new Date(strDate);
+
+            Profile profile = new Profile(fname, lname, dob);
+
+            Member dummyMember = new Member(profile);
+            if (this.list.remove(dummyMember)) {
+                System.out.println(fname + " " + lname + " removed.");
+            } else {
+                System.out.println(fname + " " + lname + " is not in the member database.");
+            }
+        }
+    }
+
+    public void parseR(StringTokenizer tokens) {
+        String strOffer = tokens.nextToken().toUpperCase();
+        String strInstructor = tokens.nextToken();
+        String strLocation = tokens.nextToken().toUpperCase();
         String fname = tokens.nextToken();
         String lname = tokens.nextToken();
-        String strDate = tokens.nextToken();
-        if (!Date.tryDate(strDate)) {
-            System.out.println("The date contains characters.");
-            return;
-        }
-        Date dob = new Date(strDate);
-
+        Date dob = new Date(tokens.nextToken());
         Profile profile = new Profile(fname, lname, dob);
 
-        Member dummyMember = new Member(profile);
-        if(this.list.remove(dummyMember)){
-            System.out.println(fname + " " + lname + " removed.");
-        }else{
-            System.out.println(fname + " " + lname + " is not in the member database.");
+        Member dummyMember = new Member(profile, dob, Location.EDISON);
+
+        if (!Offer.tryOffer(strOffer)) {
+            System.out.println(strOffer + " - class name does not exist.");
+            return;
         }
+        Offer offer = Offer.valueOf(strOffer);
+        if (!Location.tryLocation(strLocation)) {
+            System.out.println(strLocation + " - invalid studio location.");
+            return;
+        }
+        if (!Instructor.tryInstructor(strInstructor)) {
+            System.out.println(strInstructor + " - instructor does not exist.");
+            return;
+        }
+        Instructor instructor = Instructor.valueOf(strInstructor);
+        if (this.schedule.validClassStudio(location, offer, instructor)) {
+            System.out.println(offer + " by " + instructor + " does not exist at" +
+                    location);
+            return;
+        }
+        Location location = Location.valueOf(strLocation);
+        if (!this.list.foundProfile(profile)) {
+            System.out.println(fname + " " + lname + " " + dob + " is not in the member database.");
+            return;
+        }
+        int index = this.list.findProfileIndex(profile);
+        Member member = this.list.getMembers()[index];
+        if (member.expired()) {
+            System.out.println(fname + " " + lname + " " + member.getExpire() + " membership expired.");
+        }
+
+        if(schedule.findClassTime(instructor, offer) == null){
+            
+        }
+
+        if (member.getHomeStudio() != location) {
+            System.out.println(fname + " " + lname + " is attending a class at " + location +
+                    " - [BASIC] home studio at " + member.getHomeStudio());
+        }
+
+
+
+
+
+
     }
-}
-
-public void parseR(StringTokenizer tokens){
-        //check class, location, membership y/n, expired y/n, class not on schedule, basic member home studio,
-        // time conflict, member already in schedule
-
-    //check class
-    String strOffer = tokens.nextToken();
-
-    if(!Offer.tryOffer(strOffer)){
-        System.out.println(strOffer + " - class name does not exist.");
-        return;
-    }
-    String strLocation = tokens.nextToken();
-    if(!Location.tryLocation(strLocation)){
-        System.out.println(strLocation + " - invalid studio location.");
-        return;
-    }
-    String strInstructor = tokens.nextToken();
-
-    if(!Instructor.tryInstructor(strInstructor)){
-        System.out.println(strInstructor + " - instructor does not exist.");
-        return;
-    }
-
-    if(Schedule.)
-
-
-
-}
-
-
 
 
 

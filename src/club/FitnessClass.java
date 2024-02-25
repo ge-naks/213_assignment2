@@ -1,6 +1,6 @@
 package club;
 
-public class FitnessClass implements Comparable<FitnessClass> {
+public class FitnessClass{
     private Offer classInfo;
     private Instructor instructor;
     private Location studio;
@@ -23,22 +23,20 @@ public class FitnessClass implements Comparable<FitnessClass> {
         return instructor;
     }
 
+    public MemberList getGuests() {
+        return guests;
+    }
+
+    public Time getTime() {
+        return time;
+    }
+
+    public MemberList getMembers() {
+        return members;
+    }
+
     public Location getStudio() {
         return studio;
-    }
-
-    @Override
-    public String toString(){
-        return  this.classInfo + " - " + this.instructor + ", " + this.time + ", "
-                + this.studio;
-    }
-
-    public boolean equals(){
-        return true;
-    }
-
-    public int compareTo(FitnessClass fitnessClass){
-        return 0;
     }
 
 
