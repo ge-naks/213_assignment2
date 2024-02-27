@@ -42,6 +42,8 @@ public class Member implements Comparable<Member> {
     }
 
 
+
+
     public Profile getProfile() {
         return profile;
     }
@@ -130,17 +132,25 @@ public class Member implements Comparable<Member> {
      * @return A string representation of the Member object.
      */
     public String toString() {
+        if(this instanceof Premium){
+            if(!this.expired()) {
+                return this.profile.toString() + ", Membership expires " +
+                        this.expire.toString() + ", Home Studio: " +
+                        this.homeStudio.toString().toUpperCase();
+            }
+            return this.profile.toString() + ", Membership expired " +
+                    this.expire.toString() + ", Home Studio: " +
+                    this.homeStudio.toString().toUpperCase();
+        }
 
         if(!this.expired()) {
             return this.profile.toString() + ", Membership expires " +
                     this.expire.toString() + ", Home Studio: " +
-                    this.homeStudio.toString().toUpperCase() + ", " + this.homeStudio.getZipCode() + ", " +
-                    this.homeStudio.getCounty();
+                    this.homeStudio.toString().toUpperCase();
         }
         return this.profile.toString() + ", Membership expired " +
                 this.expire.toString() + ", Home Studio: " +
-                this.homeStudio.toString().toUpperCase() + ", " + this.homeStudio.getZipCode() + ", " +
-                this.homeStudio.getCounty();
+                this.homeStudio.toString().toUpperCase();
     }
 
     public static void main(String[] args) {

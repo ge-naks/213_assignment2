@@ -39,6 +39,18 @@ public class Schedule {
         }
     }
 
+    public int findClassOffer(Time time, Instructor instructor, Offer offer){
+        final int NOT_FOUND = -1;
+        for(int i = 0; i < this.numClasses; i++){
+            if(this.classes[i].getInstructor() == instructor && this.classes[i].getTime() == time &&
+                    this.classes[i].getClassInfo() == offer){
+                return i;
+            }
+        }
+        return NOT_FOUND;
+    }
+
+
     public int findClass(Time time, Instructor instructor){
         final int NOT_FOUND = -1;
         for(int i = 0; i < this.numClasses; i++){
@@ -53,6 +65,25 @@ public class Schedule {
         int index = findClass(time, instructor);
         return this.classes[index].addMember(member);
     }
+
+    public boolean removeMemberFromClass(Member member, Time time, Instructor instructor){
+        int index = findClass(time, instructor);
+        return this.classes[index].removeMember(member);
+    }
+
+
+    public boolean addGuestToClass(Member member, Time time, Instructor instructor){
+        int index = findClass(time, instructor);
+        return this.classes[index].addGuest(member);
+    }
+
+    public boolean removeGuestFromClass(Member member, Time time, Instructor instructor, Offer offer){
+        int index = findClassOffer(time, instructor, offer);
+        return this.classes[index].removeGuest(member);
+    }
+
+
+
 
 
     private void parseTokens(StringTokenizer tokens) {
@@ -89,6 +120,18 @@ public class Schedule {
         }
         return null; // If no matching class is found, return null
     }
+
+    public Time findClassTimeByLocation(Instructor instructor, Offer offer, Location location) {
+        for (FitnessClass fitnessClass : classes) {
+            if (fitnessClass.getInstructor() == instructor &&
+                    fitnessClass.getClassInfo() == offer &&
+                    fitnessClass.getStudio() == location) {
+                return fitnessClass.getTime(); // Return the time of the class
+            }
+        }
+        return null; // If no matching class is found, return null
+    }
+
 
 
 

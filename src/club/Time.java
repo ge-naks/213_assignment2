@@ -20,7 +20,7 @@ public enum Time {
     }
 
     public String getTime() {
-        String hourString = (hour < 10) ? "0" + hour : String.valueOf(hour);
+        String hourString = String.valueOf(hour); // Remove leading zero formatting
         String minuteString = (minute < 10) ? "0" + minute : String.valueOf(minute);
         return hourString + ":" + minuteString;
     }

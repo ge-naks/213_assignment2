@@ -17,6 +17,7 @@ public class FitnessClass {
         this.guests = new MemberList();  // Initialize guests list
     }
 
+
     public Offer getClassInfo() {
         return classInfo;
     }
@@ -46,12 +47,26 @@ public class FitnessClass {
 
     }
 
+    public boolean removeMember(Member member){
+        return this.members.remove(member);
+    }
+
+
+    public boolean addGuest(Member member){
+        return this.guests.forceAdd(member);
+
+    }
+
+    public boolean removeGuest(Member member){
+        return this.guests.remove(member);
+    }
 
 
     @Override
     public String toString() {
-        return this.classInfo + " - " + this.instructor + ", " + this.time + ", "
-                + this.studio;
+        String strName = this.studio.name();
+        return this.classInfo + " - " + this.instructor.toString().toUpperCase() + ", " + this.time.getTime() + ", "
+                + this.studio.name();
     }
 
 }

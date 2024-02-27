@@ -11,9 +11,13 @@ public class Basic extends Member {
         super(profile, expire, homeStudio);
         numClasses = 0;
     }
-    // getter
+
     public int getNumClasses() {
         return this.numClasses;
+    }
+
+    public void setNumClasses(int numClasses) {
+        this.numClasses = numClasses;
     }
 
     public String guestStatus(){

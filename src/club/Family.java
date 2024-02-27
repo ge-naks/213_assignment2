@@ -13,6 +13,16 @@ public class Family extends Member {
         this.guest = true;
     }
 
+    public void lostGuest(){
+        this.guest = false;
+    }
+
+    public boolean hasGuestOut(){
+        return this.guest;
+    }
+
+
+
 
     public String guestStatus(){
         final String HAS_GUEST = "0";

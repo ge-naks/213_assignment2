@@ -61,6 +61,13 @@ public class MemberList {
         return this.find(member) != NOT_FOUND;
     }
 
+    public boolean forceAdd(Member member){
+        if (this.size == this.members.length) this.grow();
+        this.members[size] = member;
+        this.size++;
+        return true;
+    }
+
     public boolean add(Member member) {
         if(!member.getProfile().validDOB()) return false;
         if (!this.contains(member)) {
@@ -217,7 +224,7 @@ public class MemberList {
         }
         // Print the sorted members
         for (int i = 0; i < size; i++) {
-            System.out.println(members[i]); // Assuming Member class has a proper toString() method
+            System.out.println(members[i]);
         }
     }
 

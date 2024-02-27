@@ -65,6 +65,21 @@ public class StudioManager {
         }
     }
 
+    public void handleS() {
+        System.out.println("-Fitness classes-");
+        printAttendance();
+        System.out.println("-end of class list.");
+        System.out.println();
+    }
+
+    public void handlePM() {
+        System.out.println();
+        System.out.println("-list of members sorted by member profiles-");
+        this.list.printByMember();
+        System.out.println("-end of list-");
+        System.out.println();
+    }
+
 
     public void processCommand(StringTokenizer tokens) {
         String command = tokens.nextToken();
@@ -83,15 +98,10 @@ public class StudioManager {
                 parseC(tokens);
                 break;
             case "S":
-                // see class attendance
+                handleS();
                 break;
             case "PM":
-                //to display the members sorted by member profiles
-                System.out.println();
-                System.out.println("-list of members sorted by member profiles-");
-                this.list.printByMember();
-                System.out.println("-end of list-");
-                System.out.println();
+                handlePM();
                 break;
             case "PC":
                 this.list.printByCounty();
@@ -103,19 +113,13 @@ public class StudioManager {
                 parseR(tokens);
                 break;
             case "U":
-                // remove from class
+                parseU(tokens);
                 break;
             case "RG":
-                // register guest for class
+                parseRG(tokens);
                 break;
             case "UG":
-                // deregister guest for class
-                break;
-            case "t":
-                for (int i = 0; i < this.list.getSize(); i++) {
-                    Member[] temp = this.list.getMembers();
-                    System.out.println(temp[i]);
-                }
+                parseUG(tokens);
                 break;
             default:
                 System.out.println(command + " is an invalid command!");
@@ -131,7 +135,6 @@ public class StudioManager {
 
         return new Date(todayMonth, todayDay, todayYear);
     }
-
 
 
     private void parseAB(StringTokenizer tokens) {
@@ -162,7 +165,7 @@ public class StudioManager {
             System.out.println("DOB " + dob + ": invalid calendar date!");
             return;
         }
-        if(dob.isFuture()){
+        if (dob.isFuture()) {
             System.out.println("DOB " + dob + ": cannot be today or a future date!");
             return;
         }
@@ -235,7 +238,7 @@ public class StudioManager {
         Profile profile = new Profile(fname, lname, dob);
         String strHomeStudio = tokens.nextToken();
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MONTH, 11);
+        cal.add(Calendar.MONTH, 12);
         Date expire = calendarToDate(cal);
         if (!Location.tryLocation(strHomeStudio)) {
             System.out.println(strHomeStudio + ": invalid studio location!");
@@ -282,6 +285,19 @@ public class StudioManager {
         }
     }
 
+    public static String capitalizeFirstLetter(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+        str = str.toLowerCase();
+        return Character.toUpperCase(str.charAt(0)) + str.substring(1);
+    }
+
+    public void testStuff() {
+
+    }
+
+
     public void parseR(StringTokenizer tokens) {
         String strOffer = tokens.nextToken();
         String strInstructor = tokens.nextToken();
@@ -290,70 +306,77 @@ public class StudioManager {
         String lname = tokens.nextToken();
         Date dob = new Date(tokens.nextToken());
         Profile profile = new Profile(fname, lname, dob);
-
-        if (!Offer.tryOffer(strOffer)) {
-            System.out.println(strOffer + " - class name does not exist.");
-            return;
-        }
-        Offer offer = Offer.valueOf(strOffer.toUpperCase());
-        if (!Location.tryLocation(strLocation)) {
-            System.out.println(strLocation + " - invalid studio location.");
-            return;
-        }
-        Location location = Location.valueOf(strLocation.toUpperCase());
-        if (!Instructor.tryInstructor(strInstructor)) {
-            System.out.println(strInstructor + " - instructor does not exist.");
-            return;
-        }
-        Instructor instructor = Instructor.valueOf(strInstructor);
-        if (this.schedule.validClassStudio(location, offer, instructor)) {
-            System.out.println(offer + " by " + instructor + " does not exist at" +
-                    location);
-            return;
-        }
-        if (!this.list.foundProfile(profile)) {
-            System.out.println(fname + " " + lname + " " + dob + " is not in the member database.");
-            return;
-        }
+        if (!validateOffer(strOffer, strInstructor, strLocation, profile)) return;
         int index = this.list.findProfileIndex(profile);
         Member member = this.list.getMembers()[index];
-        if (member.expired()) {
-            System.out.println(fname + " " + lname + " " + member.getProfile().getDob() + " membership expired.");
-        }
-        if (schedule.findClassTime(instructor, offer) == null) {
-            System.out.println("Idk the proper error msg");
+        if (checkMemberValidity(member, profile)) return;
+        Time time = schedule.findClassTime(Instructor.valueOf(capitalizeFirstLetter(strInstructor)), Offer.valueOf(strOffer.toUpperCase()));
+        if (time == null) {
+            System.out.println(strOffer + " by " + capitalizeFirstLetter(strInstructor) + " does not exist at " +
+                    strLocation);
             return;
         }
-
-        Time time = schedule.findClassTime(instructor, offer);
-
-        if(alreadyInClass(time, instructor, member)){
+        if (alreadyInClass(time, Instructor.valueOf(capitalizeFirstLetter(strInstructor)), member)) {
             System.out.println(fname + " " + lname + " is already in the class.");
             return;
         }
-        if (findTimeConflict(member, time, location, instructor)) {
+        if (findTimeConflict(member, time, Location.valueOf(strLocation.toUpperCase()), Instructor.valueOf(capitalizeFirstLetter(strInstructor))))
+            return;
+        if (member.getHomeStudio() != Location.valueOf(strLocation.toUpperCase()) && member instanceof Basic) {
+            System.out.println(fname + " " + lname + " is attending a class at " + strLocation.toUpperCase() + " - [BASIC] home studio at " + member.getHomeStudio().name());
             return;
         }
-
-        if (member.getHomeStudio() != location) {
-            System.out.println(fname + " " + lname + " is attending a class at " + location +
-                    " - [BASIC] home studio at " + member.getHomeStudio().getCounty());
-            return;
+        if (this.schedule.addMemberToClass(member, time, Instructor.valueOf(capitalizeFirstLetter(strInstructor)))) {
+            System.out.println(fname + " " + lname + " attendance recorded " + Offer.valueOf(strOffer.toUpperCase()) + " at " + Location.valueOf(strLocation.toUpperCase()));
+            if (member instanceof Basic basicMember) {
+                basicMember.setNumClasses(basicMember.getNumClasses() + 1);
+            }
         }
-
-
-
-        if(this.schedule.addMemberToClass(member,time,instructor)){
-            System.out.println(fname + " " + lname + " attendance recorded " + offer + " at " +
-                    location);
-        }
-
     }
 
-    public boolean alreadyInClass(Time time, Instructor instructor, Member member){
+    private boolean validateOffer(String strOffer, String strInstructor, String strLocation, Profile profile) {
+        if (!Offer.tryOffer(strOffer)) {
+            System.out.println(strOffer + " - class name does not exist.");
+            return false;
+        }
+
+        if (!Location.tryLocation(strLocation)) {
+            System.out.println(strLocation + " - invalid studio location.");
+            return false;
+        }
+
+        if (!Instructor.tryInstructor(capitalizeFirstLetter(strInstructor))) {
+            System.out.println(strInstructor + " - instructor does not exist.");
+            return false;
+        }
+
+        if (this.schedule.validClassStudio(Location.valueOf(strLocation.toUpperCase()), Offer.valueOf(strOffer.toUpperCase()), Instructor.valueOf(capitalizeFirstLetter(strInstructor)))) {
+            System.out.println(strOffer + " by " + capitalizeFirstLetter(strInstructor) + " does not exist at " + Location.valueOf(strLocation.toUpperCase()));
+            return false;
+        }
+
+        if (!this.list.foundProfile(profile)) {
+            System.out.println(profile.getFname() + " " + profile.getLname() + " " + profile.getDob() + " is not in the member database.");
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean checkMemberValidity(Member member, Profile profile) {
+        if (member.expired()) {
+            System.out.println(profile.getFname() + " " + profile.getLname() + " " + member.getProfile().getDob() + " membership expired.");
+            return true;
+        }
+        return false;
+    }
+
+
+    public boolean alreadyInClass(Time time, Instructor instructor, Member member) {
         int index = this.schedule.findClass(time, instructor);
         return this.schedule.getClasses()[index].getMembers().contains(member);
     }
+
 
     public boolean findTimeConflict(Member member, Time time, Location location, Instructor instructor) {
         for (FitnessClass fitnessClass : schedule.getClasses()) {
@@ -362,7 +385,7 @@ public class StudioManager {
 
                     System.out.println("Time conflict - " + member.getProfile().getFname() + " " +
                             member.getProfile().getLname() + " is in another class held at " + time.getTime() +
-                            " - " + instructor.toString().toUpperCase() + ", " + time.getTime() + ", " + location.getCounty());
+                            " - " + instructor.toString().toUpperCase() + ", " + time.getTime() + ", " + location.name());
                     return true; //conflict exists
                 }
             }
@@ -370,5 +393,136 @@ public class StudioManager {
         return false;
     }
 
+    public void printAttendance() {
+        FitnessClass[] classes = schedule.getClasses();
+        for (int i = 0; i < schedule.getNumClasses(); i++) {
+            FitnessClass fitnessClass = classes[i];
+            System.out.println(fitnessClass);
+            MemberList members = fitnessClass.getMembers();
+            MemberList guests = fitnessClass.getGuests();
+            if (members.getSize() > 0) {
+                System.out.println("[Attendees]");
+                for (int j = 0; j < members.getSize(); j++) {
+                    System.out.println("   " + members.getMembers()[j]);
+                }
+            }
+
+            if (guests.getSize() > 0) {
+                System.out.println("[Guests]");
+                for (int j = 0; j < guests.getSize(); j++) {
+                    System.out.println("   " + guests.getMembers()[j]);
+                }
+            }
+
+        }
+    }
+
+
+    public void parseU(StringTokenizer tokens) {
+        Offer offer = Offer.valueOf(tokens.nextToken().toUpperCase());
+        Instructor instructor = Instructor.valueOf(capitalizeFirstLetter(tokens.nextToken()));
+        Location location = Location.valueOf(tokens.nextToken().toUpperCase());
+        String fname = tokens.nextToken();
+        String lname = tokens.nextToken();
+        Date dob = new Date(tokens.nextToken());
+
+        Profile profile = new Profile(fname, lname, dob);
+        Member dummyMember = new Member(profile);
+
+
+        Time time = this.schedule.findClassTime(instructor, offer);
+
+        if (alreadyInClass(time, instructor, dummyMember)) {
+            this.schedule.removeMemberFromClass(dummyMember, time, instructor);
+            System.out.println(fname + " " + lname + " is removed from " + instructor.toString().toUpperCase() + ", " +
+                    time.getTime() + ", " + location);
+        } else {
+            System.out.println(fname + " " + lname + " is not in " + instructor.toString().toUpperCase() + ", " +
+                    time.getTime() + ", " + location);
+        }
+    }
+
+    public void parseRG(StringTokenizer tokens) {
+        String strOffer = tokens.nextToken();
+        String strInstructor = tokens.nextToken();
+        String strLocation = tokens.nextToken();
+        String fname = tokens.nextToken();
+        String lname = tokens.nextToken();
+        Date dob = new Date(tokens.nextToken());
+        Profile profile = new Profile(fname, lname, dob);
+        if (!validateOffer(strOffer, strInstructor, strLocation, profile)) return;
+        int index = this.list.findProfileIndex(profile);
+        Member member = this.list.getMembers()[index];
+        if (checkMemberValidity(member, profile)) return;
+        Time time = schedule.findClassTime(Instructor.valueOf(capitalizeFirstLetter(strInstructor)), Offer.valueOf(strOffer.toUpperCase()));
+        if (time == null) {
+            System.out.println(strOffer + " by " + capitalizeFirstLetter(strInstructor) + " does not exist at " + strLocation);
+            return;
+        }
+        if (member instanceof Basic) {
+            System.out.println(fname + " " + lname + " [BASIC] - no guest pass.");
+            return;
+        }
+        if (member.getHomeStudio() != Location.valueOf(strLocation.toUpperCase())) {
+            System.out.println(fname + " " + lname + " (guest) is attending a class at " + strLocation.toUpperCase() + " - home studio at " + member.getHomeStudio().name());
+            return;
+        }
+        if (member instanceof Premium) {
+            if(!((Premium) member).hasMorePass()){
+                System.out.println(fname + " " + lname + " guest pass not available.");
+                return;
+            }
+            if (this.schedule.addGuestToClass(member, time, Instructor.valueOf(capitalizeFirstLetter(strInstructor)))) {
+                System.out.println(fname + " " + lname + " (guest) attendance recorded " + Offer.valueOf(strOffer.toUpperCase()) + " at " + Location.valueOf(strLocation.toUpperCase()));
+                ((Premium) member).addGuest();
+            }return;}
+        if(!((Family) member).hasGuestOut()){
+            if (this.schedule.addGuestToClass(member, time, Instructor.valueOf(capitalizeFirstLetter(strInstructor)))) {
+                System.out.println(fname + " " + lname + " (guest) attendance recorded " +
+                        Offer.valueOf(strOffer.toUpperCase()) + " at " + Location.valueOf(strLocation.toUpperCase()));
+                ((Family) member).broughtGuest();
+            }
+        }else{
+            System.out.println(fname + " " + lname + " guest pass not available.");
+        }
+    }
+
+    public void parseUG(StringTokenizer tokens) {
+        Offer offer = Offer.valueOf(tokens.nextToken().toUpperCase());
+        Instructor instructor = Instructor.valueOf(capitalizeFirstLetter(tokens.nextToken()));
+        Location location = Location.valueOf(tokens.nextToken().toUpperCase());
+        String fname = tokens.nextToken();
+        String lname = tokens.nextToken();
+        Date dob = new Date(tokens.nextToken());
+
+        Profile profile = new Profile(fname, lname, dob);
+        int index = this.list.findProfileIndex(profile);
+        Member member = this.list.getMembers()[index];
+
+        if(member instanceof Basic){
+            System.out.println("IDK the error msg but its basic");
+        }
+
+
+        Time time = this.schedule.findClassTimeByLocation(instructor, offer, location);
+
+        if (alreadyInClass(time, instructor, member)) {
+            this.schedule.removeGuestFromClass(member, time, instructor, offer);
+            System.out.println(fname + " " + lname + " (guest) is removed from " + instructor.toString().toUpperCase() + ", " +
+                    time.getTime() + ", " + location);
+            if(member instanceof Premium){
+                ((Premium) member).removeGuest();
+            }else{
+                ((Family) member).lostGuest();
+            }
+        } else {
+            System.out.println(fname + " " + lname + " is not in " + instructor.toString().toUpperCase() + ", " +
+                    time.getTime() + ", " + location);
+        }
+    }
+
 
 }
+
+
+

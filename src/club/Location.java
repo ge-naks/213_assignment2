@@ -52,6 +52,7 @@ public enum Location {
     public String getCounty() {
         return county;
     }
+
     @Override
     public String toString() {
         return name() + ", " + getZipCode() + ", " + getCounty();
