@@ -5,23 +5,37 @@ import java.io.File;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
+/**
+ * Represents a list of club members.
+ */
 public class MemberList {
     private Member[] members; //holds Basic, Family, or Premium objects
     private int size; //number of objects in the array
     private final int NOT_FOUND = -1;
 
-
-    public MemberList(){
+    /**
+     * Constructs an empty MemberList with an initial capacity of 4.
+     */
+    public MemberList() {
         this.size = 0;
         int INITIAL_CAPACITY = 4;
         this.members = new Member[INITIAL_CAPACITY];
-
     }
 
+    /**
+     * Gets the size of the member list.
+     *
+     * @return the number of members in the list
+     */
     public int getSize() {
         return size;
     }
 
+    /**
+     * Gets the array of members.
+     *
+     * @return the array of members
+     */
     public Member[] getMembers() {
         return members;
     }
@@ -172,22 +186,16 @@ public class MemberList {
 
 
     public void printByCounty() {
+        System.out.println();
+        System.out.println("-list of members sorted by county then zipcode-");
+
         // Bubble sort implementation
-        for (int i = 0; i < size - 1; i++) {
-            for (int j = 0; j < size - i - 1; j++) {
+        for (int i = 0; i < this.size - 1; i++) {
+            for (int j = 0; j < this.size - i - 1; j++) {
                 // Compare counties
                 int countyComparison = members[j].getHomeStudio().getCounty().compareTo(members[j + 1].getHomeStudio().getCounty());
 
-                // If counties are the same, compare zip codes
-                if (countyComparison == 0) {
-                    int zipCodeComparison = members[j].getHomeStudio().getZipCode().compareTo(members[j + 1].getHomeStudio().getZipCode());
-                    if (zipCodeComparison > 0) {
-                        // Swap members
-                        Member temp = members[j];
-                        members[j] = members[j + 1];
-                        members[j + 1] = temp;
-                    }
-                } else if (countyComparison > 0) {
+                if (countyComparison > 0 || (countyComparison == 0 && members[j].getHomeStudio().getZipCode().compareTo(members[j + 1].getHomeStudio().getZipCode()) > 0)) {
                     // Swap members
                     Member temp = members[j];
                     members[j] = members[j + 1];
@@ -196,12 +204,14 @@ public class MemberList {
             }
         }
 
-
         // Print the sorted members
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < this.size; i++) {
             System.out.println(members[i]);
         }
+        System.out.println("-end of list-");
+        System.out.println();
     }
+
 
     public void printByMember() {
         // Bubble sort implementation
@@ -230,34 +240,16 @@ public class MemberList {
 
 
     public void printFees() {
-        // sample output:
-        // Jerry:Brown:6/30/1979, Membership expires 5/23/2024, Home Studio: EDISON, 08837, MIDDLESEX, (Family) guest-pass remaining: 0
 
+        System.out.println();
+        System.out.println("-list of members with next dues-");
         for(int i = 0; i < size; i ++){
-            System.out.println(this.members[i] + "(" + this.members[i].getClass() + ")" + "guest-pass remaining: " +
-                    this.members[i].guestStatus() + " " + "[next due: " + this.members[i].bill() + "]");
+            System.out.println(this.members[i]  +
+                      " [next due: $" + this.members[i].bill() + "]");
         }
+        System.out.println("-end of list-");
+        System.out.println();
 
-    }
-
-    public static void main(String[] args) {
-        Date expiry = new Date("6/12/2024");
-        Date dob = new Date("12/14/2003");
-        Profile profile = new Profile("George", "Nakhla", dob );
-        Member member = new Member(profile,expiry,Location.BRIDGEWATER);
-
-        MemberList list = new MemberList();
-
-        list.add(member);
-        list.remove(member);
-        list.add(member);
-
-
-        System.out.println(list.size);
-
-        for(int i = 0; i < 4; i++){
-            System.out.println(list.members[i]);
-        }
     }
 
 

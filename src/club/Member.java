@@ -55,11 +55,11 @@ public class Member implements Comparable<Member> {
      */
     public double bill() {
         if (this instanceof Basic) {
-            return ((Basic) this).bill();
+            return this.bill();
         } else if (this instanceof Family) {
-            return ((Family) this).bill();
+            return this.bill();
         } else if (this instanceof Premium) {
-            return ((Premium) this).bill();
+            return this.bill();
         } else {
             // Default behavior
             return 0.0;
@@ -79,9 +79,6 @@ public class Member implements Comparable<Member> {
         }
     }
 
-    public Date getExpire() {
-        return expire;
-    }
 
     public boolean expired(){
         Calendar today =  Calendar.getInstance();

@@ -77,10 +77,12 @@ public class Schedule {
         return this.classes[index].addGuest(member);
     }
 
-    public boolean removeGuestFromClass(Member member, Time time, Instructor instructor, Offer offer){
-        int index = findClassOffer(time, instructor, offer);
+    public boolean removeGuestFromClass(Member member, Time time, Instructor instructor, Offer offer, Location location){
+        int index = findIndexByAll(instructor, offer, location, time);
         return this.classes[index].removeGuest(member);
     }
+
+
 
 
 
@@ -121,16 +123,39 @@ public class Schedule {
         return null; // If no matching class is found, return null
     }
 
+
+
+
+
+
     public Time findClassTimeByLocation(Instructor instructor, Offer offer, Location location) {
+
         for (FitnessClass fitnessClass : classes) {
             if (fitnessClass.getInstructor() == instructor &&
                     fitnessClass.getClassInfo() == offer &&
                     fitnessClass.getStudio() == location) {
-                return fitnessClass.getTime(); // Return the time of the class
+                return fitnessClass.getTime();
             }
         }
         return null; // If no matching class is found, return null
     }
+
+    public int findIndexByAll(Instructor instructor, Offer offer, Location location, Time time) {
+        int NOT_FOUND = -1;
+        for (int i = 0; i < classes.length; i++) {
+            FitnessClass fitnessClass = classes[i];
+            if (fitnessClass.getInstructor() == instructor &&
+                    fitnessClass.getClassInfo() == offer &&
+                    fitnessClass.getStudio() == location
+                    && fitnessClass.getTime() == time) {
+                return i; // Return the time of the class
+            }
+        }
+        return NOT_FOUND;
+    }
+
+
+
 
 
 
